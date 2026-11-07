@@ -1,0 +1,26 @@
+name: GrokBot 派工測試
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  acknowledge:
+    if: >-
+      github.event.label.name == 'dispatch-test' &&
+      vars.GROKBOT_ACTOR != '' &&
+      github.event.sender.login == vars.GROKBOT_ACTOR
+    runs-on: ubuntu-latest
+    steps:
+      - name: 在工單留言
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --body "已收到 GrokBot 派工測試。[查看執行紀錄]($RUN_URL)"
