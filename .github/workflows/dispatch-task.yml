@@ -33,7 +33,10 @@ jobs:
           LABEL_MATCH: ${{ github.event.label.name == 'dispatch-test' }}
           ACTOR_CONFIGURED: ${{ vars.GROKBOT_ACTOR != '' }}
           ACTOR_MATCH: ${{ github.event.sender.login == vars.GROKBOT_ACTOR }}
+          EVENT_SENDER: ${{ github.event.sender.login }}
+          EXPECTED_ACTOR: ${{ vars.GROKBOT_ACTOR }}
         run: |
           echo "標籤符合：$LABEL_MATCH"
           echo "有讀到帳號設定：$ACTOR_CONFIGURED"
           echo "加標籤帳號符合：$ACTOR_MATCH"
+          printf '實際帳號=%q；設定帳號=%q\n' "$EVENT_SENDER" "$EXPECTED_ACTOR"
