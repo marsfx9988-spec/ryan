@@ -24,3 +24,16 @@ jobs:
           gh issue comment "$ISSUE_NUMBER" \
             --repo "$GITHUB_REPOSITORY" \
             --body "已收到 GrokBot 派工測試。[查看執行紀錄]($RUN_URL)"
+  diagnose:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: 檢查派工條件
+        env:
+          LABEL_MATCH: ${{ github.event.label.name == 'dispatch-test' }}
+          ACTOR_CONFIGURED: ${{ vars.GROKBOT_ACTOR != '' }}
+          ACTOR_MATCH: ${{ github.event.sender.login == vars.GROKBOT_ACTOR }}
+        run: |
+          echo "標籤符合：$LABEL_MATCH"
+          echo "有讀到帳號設定：$ACTOR_CONFIGURED"
+          echo "加標籤帳號符合：$ACTOR_MATCH"
